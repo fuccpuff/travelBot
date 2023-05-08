@@ -41,7 +41,16 @@ def create_tables(conn):
     )
     """)
 
+
+
     conn.commit()
+
+def delete_profile_from_db(chat_id):
+    conn = sqlite3.connect('travel_buddy.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE chat_id=?", (chat_id,))
+    conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
     connection = create_connection()

@@ -3,6 +3,8 @@ import config
 from telebot import types
 from create_profile import create_profile, process_create_profile_step
 from edit_profile import edit_profile, process_edit_choice
+from delete_profile import delete_profile
+
 
 # Создаем экземпляр бота
 bot = telebot.TeleBot(config.TOKEN)
@@ -35,6 +37,8 @@ def handle_text_messages(message):
             create_profile(user_states, message, bot)
         elif message.text == 'Редактировать профиль':
             edit_profile(message, user_states, bot)
+        elif message.text == 'Удалить профиль':
+            delete_profile(message, bot)
         # Добавьте обработчики для других функций бота здесь
 
 # Запускаем бота
