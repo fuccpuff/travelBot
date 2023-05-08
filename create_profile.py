@@ -9,7 +9,8 @@ class UserProfile:
         self.gender = None
         self.countries_cities = None
         self.travel_type = None
-        self.contact_info = None
+        self.phone_number = None
+        self.email = None
 
 # Вспомогательный словарь для хранения состояний пользователей
 user_states = {}
@@ -20,9 +21,9 @@ def save_user_profile(profile):
     cursor = conn.cursor()
 
     cursor.execute('''
-        INSERT INTO users (name, age, gender, countries_cities, travel_type, contact_info)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ''', (profile.name, profile.age, profile.gender, profile.countries_cities, profile.travel_type, profile.contact_info))
+        INSERT INTO users (name, age, gender, countries_cities, travel_type, phone_number, email)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ''', (profile.name, profile.age, profile.gender, profile.countries_cities, profile.travel_type, profile.phone_number, profile.email))
 
     conn.commit()
     conn.close()
@@ -62,12 +63,15 @@ def create_profile(message, bot):
 
         elif state == 'GET_TRAVEL_TYPE':
             profile.travel_type = message.text
-            user_states[chat_id]['state'] = 'GET_CONTACT_INFO'
-            bot.send_message(chat_id, 'Пожалуйста, введите ваш номер телефона и электронную почту (через запятую):')
+            user_states[chat_id]['state'] = 'GET_PHONE_NUMBER'
+            bot.send_message(chat_id, 'Пожалуйста, введите ваш номер телефона:')
 
-        elif state == 'GET_CONTACT_INFO':
-            profile.contact_info = message.text
-
+        elif state == 'GET_PHONE_NUMBER':
+            profile.phone_number = message.text
+            user_states[chat_id]['state'] = 'GET_EMAIL'
+            bot.send_message(chat_id, 'Пожалуйста, введите вашу почту:')
+        elif state == 'GET_EMAIL':
+            profile.email = message.text
             # Сохраняем данные профиля в базе данных
             save_user_profile(profile)
 
