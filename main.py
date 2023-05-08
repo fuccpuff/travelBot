@@ -1,44 +1,45 @@
-# main.py
-
 import telebot
-from telebot import types
 import config
-from create_profile import create_profile
+from telebot import types
+from create_profile import create_profile, process_create_profile_step
+
+# Импортируйте другие функции здесь
 
 # Создаем экземпляр бота
 bot = telebot.TeleBot(config.TOKEN)
 
 
+# Создаем клавиатуру с функциями бота
+def create_keyboard():
+    keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    keyboard.add('Создать профиль', 'Редактировать профиль')
+    keyboard.add('Поиск попутчиков', 'Мои попутчики')
+    keyboard.add('Удалить профиль', 'Создать групповой чат')
+    return keyboard
+
+
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
-def start(message):
-    # Создаем клавиатуру
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-
-    # Добавляем кнопки на клавиатуру
-    keyboard.add('Создать профиль')
-    keyboard.add('Редактировать профиль')
-    keyboard.add('Поиск попутчиков')
-    keyboard.add('Мои попутчики')
-    keyboard.add('Удалить профиль')
-    keyboard.add('Создать групповой чат')
-
-    # Отправляем приветственное сообщение с клавиатурой
-    bot.send_message(
-        message.chat.id,
-        "Привет! Я Travel Buddy, твой путешественный помощник. "
-        "Выбери действие с помощью кнопок ниже:",
-        reply_markup=keyboard
-    )
+def start_command(message):
+    bot.send_message(message.chat.id, 'Добро пожаловать в бота для поиска попутчиков в путешествиях!',
+                     reply_markup=create_keyboard())
 
 
+user_states = {}
+
+
+# Обработчик для текстовых сообщений
 @bot.message_handler(content_types=['text'])
 def handle_text_messages(message):
-    if message.text == 'Создать профиль':
-        create_profile(message, bot)
-    # Добавьте обработчики для других функций бота здесь
+    chat_id = message.chat.id
+
+    if chat_id in user_states:
+        process_create_profile_step(user_states, message, bot)
+    else:
+        if message.text == 'Создать профиль':
+            create_profile(user_states, message, bot)
+        # Добавьте обработчики для других функций бота здесь
 
 
 # Запускаем бота
-if __name__ == '__main__':
-    bot.infinity_polling()
+bot.polling(none_stop=True)

@@ -8,19 +8,16 @@ def create_tables(conn):
     cursor = conn.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY,
-        user_id INTEGER NOT NULL UNIQUE,
-        first_name TEXT NOT NULL,
-        last_name TEXT NOT NULL,
-        age INTEGER NOT NULL,
-        gender TEXT NOT NULL,
-        countries_visited TEXT,
-        countries_wishlist TEXT,
-        travel_type TEXT NOT NULL,
-        phone_number TEXT,
-        email TEXT
-    )
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            chat_id INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            age INTEGER,
+            gender TEXT,
+            countries_cities TEXT,
+            travel_type TEXT,
+            contact_info TEXT
+        )
     """)
 
     cursor.execute("""
