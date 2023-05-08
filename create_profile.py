@@ -1,4 +1,3 @@
-# create_profile.py
 import sqlite3
 
 class UserProfile:
