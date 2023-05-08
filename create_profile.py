@@ -16,7 +16,7 @@ user_states = {}
 
 # Функция для сохранения данных профиля в базе данных
 def save_user_profile(profile):
-    conn = sqlite3.connect('travel_bot.db')
+    conn = sqlite3.connect('travel_buddy.db')
     cursor = conn.cursor()
 
     cursor.execute('''
