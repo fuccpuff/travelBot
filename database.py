@@ -52,7 +52,49 @@ def delete_profile_from_db(chat_id):
     conn.commit()
     conn.close()
 
+
+def add_selected_companion(user_id, companion_id):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT OR IGNORE INTO selected_companions (user_id, companion_id) VALUES (?, ?)
+    ''', (user_id, companion_id))
+    conn.commit()
+    conn.close()
+
+def remove_selected_companion(user_id, companion_id):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM selected_companions WHERE user_id = ? AND companion_id = ?', (user_id, companion_id))
+    conn.commit()
+    conn.close()
+
+def get_selected_companions(user_id):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT companion_id FROM selected_companions WHERE user_id = ?', (user_id,))
+    companions = cursor.fetchall()
+    conn.close()
+    return companions
+
+def create_selected_companions_table():
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS selected_companions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            companion_id INTEGER,
+            UNIQUE(user_id, companion_id)
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+create_selected_companions_table()
+
 if __name__ == "__main__":
     connection = create_connection()
     create_tables(connection)
+
     connection.close()
