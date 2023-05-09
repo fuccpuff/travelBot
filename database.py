@@ -119,6 +119,30 @@ def remove_selected_companion(user_id, companion_id):
     conn.commit()
     conn.close()
 
+def get_chat_id_by_user_id(user_id):
+    conn = sqlite3.connect('travel_buddy.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT chat_id FROM users WHERE user_id = ?", (user_id,))
+    result = cursor.fetchone()
+    conn.close()
+
+    if result:
+        return result[0]
+    else:
+        return None
+
+def get_user_by_id(user_id):
+    conn = sqlite3.connect('travel_buddy.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+    result = cursor.fetchone()
+    conn.close()
+
+    return result
+
+
 
 create_selected_companions_table()
 
