@@ -110,6 +110,16 @@ def get_companion_by_id(companion_id):
     user = cursor.fetchone()
     return user
 
+def remove_selected_companion(user_id, companion_id):
+    conn = sqlite3.connect('travel_buddy.db')
+    cursor = conn.cursor()
+
+    cursor.execute('DELETE FROM selected_companions WHERE user_id = ? AND companion_id = ?', (user_id, companion_id))
+
+    conn.commit()
+    conn.close()
+
+
 create_selected_companions_table()
 
 if __name__ == "__main__":

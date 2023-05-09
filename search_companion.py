@@ -12,7 +12,6 @@ def search_companions(chat_id, criteria):
     for user in all_users:
         print(user)
     # Конец отладочного кода
-
     cursor.execute('''
         SELECT * FROM users WHERE travel_type = ? AND chat_id != ?''', (criteria['travel_type'], chat_id))
     companions = cursor.fetchall()
@@ -34,12 +33,10 @@ def select_companions(chat_id, companions, bot):
     if not companions:
         bot.send_message(chat_id, "К сожалению, не найдено подходящих попутчиков.")
         return
-
     keyboard = types.InlineKeyboardMarkup(row_width=1)
     for companion in companions:
         companion_name = f"{companion[2]}"
         callback_data = f"select_companion:{companion[0]}"
         keyboard.add(types.InlineKeyboardButton(text=companion_name, callback_data=callback_data))
-
     keyboard.add(types.InlineKeyboardButton(text="Готово", callback_data="finish_selecting_companions"))
     bot.send_message(chat_id, "Выберите попутчиков, с которыми хотите связаться:", reply_markup=keyboard)
