@@ -20,7 +20,6 @@ def search_companions(chat_id, criteria):
     return companions
 
 
-
 def search_companion_handler(message, bot):
     chat_id = message.chat.id
     # Создаем инлайн-клавиатуру для выбора типа отдыха
