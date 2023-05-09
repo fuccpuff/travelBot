@@ -102,14 +102,13 @@ def create_selected_companions_table():
     conn.close()
 
 
-def get_companion_by_id(user_id):
+def get_companion_by_id(companion_id):
     conn = sqlite3.connect('travel_buddy.db')
     cursor = conn.cursor()
 
-    cursor.execute('''SELECT * FROM users WHERE chat_id = ?''', (user_id,))
+    cursor.execute('''SELECT * FROM users WHERE id = ?''', (companion_id,))
     user = cursor.fetchone()
     return user
-
 
 create_selected_companions_table()
 

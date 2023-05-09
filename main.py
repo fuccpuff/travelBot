@@ -79,25 +79,22 @@ def handle_select_companion_callback(call):
     chat_id = call.message.chat.id
 
     if call.data == "finish_selecting_companions":
-        selected_companion_ids = get_selected_companions(chat_id)
+        selected_companions = get_selected_companions(chat_id)
 
-        if not selected_companion_ids:
+        if not selected_companions:
             bot.send_message(chat_id, "Вы не выбрали ни одного попутчика.")
         else:
-            for companion_id in selected_companion_ids:
+            for companion_id in selected_companions:
                 companion = get_companion_by_id(companion_id)
                 if companion:
-                    companion_info = f"Имя: {companion[1]}\nФамилия: {companion[2]}\nВозраст: {companion[3]}\nПол: {companion[4]}\nСтраны и города: {companion[5]}\nТип отдыха: {companion[6]}\nКонтактная информация: {companion[7]}"
+                    companion_info = f"Имя: {companion[2]}\nВозраст: {companion[3]}\nПол: {companion[4]}\nСтраны и города: {companion[5]}\nТип отдыха: {companion[6]}\nКонтактная информация: {companion[7]}"
                     bot.send_message(chat_id, f"Контактная информация попутчика:\n{companion_info}")
                 else:
                     bot.send_message(chat_id, f"Попутчик с ID {companion_id} не найден.")
-
     else:
         companion_id = int(call.data.split(":")[-1])
         add_selected_companion(chat_id, companion_id)
         bot.answer_callback_query(call.id, "Попутчик добавлен в выбранные.")
-
-
 
 # Запускаем бота
 bot.polling(none_stop=True)
